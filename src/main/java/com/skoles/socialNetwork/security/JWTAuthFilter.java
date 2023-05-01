@@ -18,10 +18,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
-public class JWTAuthenticationFilter extends OncePerRequestFilter {
-    public static final Logger LOG = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
+public class JWTAuthFilter extends OncePerRequestFilter {
+    public static final Logger LOG = LoggerFactory.getLogger(JWTAuthFilter.class);
     @Autowired
-    private JWTTokenProvider jwtTokenProvider;
+    private JWTProvider jwtProvider;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
     @Override
@@ -29,8 +29,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             String jwt = getJWTFromRequest(request);
-            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-                Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
+            if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {
+                Long userId = jwtProvider.getUserIdFromToken(jwt);
                 User userDetails = customUserDetailsService.loadUserById(userId);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -43,12 +43,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception ex) {
             LOG.error("Could not set user authentication");
         }
-//        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 
     private String getJWTFromRequest(HttpServletRequest request) {
-        String bearToken = request.getHeader(SecurityConstants.HEADER_STRING);
-        if (StringUtils.hasText(bearToken) && bearToken.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+        String bearToken = request.getHeader(SecurityConst.HEADER_STRING);
+        if (StringUtils.hasText(bearToken) && bearToken.startsWith(SecurityConst.TOKEN_PREFIX)) {
             return bearToken.split(" ")[1];
         }
         return null;

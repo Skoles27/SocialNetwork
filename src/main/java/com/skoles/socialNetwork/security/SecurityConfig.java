@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true, proxyTargetClass = true)
 public class SecurityConfig {
     @Autowired
-    private JWTAuthenticationEntryPoint jwtAuthEntryPoint;
+    private JWTAuthEntryPoint jwtAuthEntryPoint;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests()
-                .requestMatchers(SecurityConstants.SIGN_UP_URLS).permitAll()
+                .requestMatchers(SecurityConst.SIGN_UP_URLS).permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -49,7 +49,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JWTAuthenticationFilter jwtAuthenticationFilter() {
-        return new JWTAuthenticationFilter();
+    public JWTAuthFilter jwtAuthenticationFilter() {
+        return new JWTAuthFilter();
     }
 }

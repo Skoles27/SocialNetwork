@@ -1,7 +1,7 @@
 package com.skoles.socialNetwork.security;
 
 import com.google.gson.Gson;
-import com.skoles.socialNetwork.payload.InvalidLoginResponse;
+import com.skoles.socialNetwork.payload.response.InvalidSignInResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class JWTAuthEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
-        InvalidLoginResponse loginResponse = new InvalidLoginResponse();
-        String jsonLoginResponse = new Gson().toJson(loginResponse);
-        response.setContentType(SecurityConstants.CONTENT_TYPE);
+        InvalidSignInResponse signInResponse = new InvalidSignInResponse();
+        String jsonSignInResponse = new Gson().toJson(signInResponse);
+        response.setContentType(SecurityConst.CONTENT_TYPE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().println(jsonLoginResponse);
+        response.getWriter().println(jsonSignInResponse);
     }
 }

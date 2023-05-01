@@ -7,18 +7,20 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JWTTokenProvider {
-    public static final Logger LOG = LoggerFactory.getLogger(JWTTokenProvider.class);
+@Component
+public class JWTProvider {
+    public static final Logger LOG = LoggerFactory.getLogger(JWTProvider.class);
 
     public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         Date now = new Date(System.currentTimeMillis());
-        Date expiryDate = new Date(now.getTime() + SecurityConstants.EXPIRATION_TIME);
+        Date expiryDate = new Date(now.getTime() + SecurityConst.EXPIRATION_TIME);
 
         String userId = Long.toString(user.getId());
 
@@ -33,13 +35,13 @@ public class JWTTokenProvider {
                 .addClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
+                .signWith(SignatureAlgorithm.HS256, SecurityConst.SECRET)
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(SecurityConstants.SECRET).build().parseClaimsJwt(token);
+            Jwts.parserBuilder().setSigningKey(SecurityConst.SECRET).build().parseClaimsJws(token);
             return true;
         } catch (Exception ex) {
             LOG.error(ex.getMessage());
@@ -48,8 +50,8 @@ public class JWTTokenProvider {
     }
 
     public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parserBuilder().setSigningKey(SecurityConstants.SECRET).build()
-                .parseClaimsJwt(token).getBody();
+        Claims claims = Jwts.parserBuilder().setSigningKey(SecurityConst.SECRET).build().
+                parseClaimsJws(token).getBody();
         String id = (String) claims.get("id");
         return Long.parseLong(id);
     }

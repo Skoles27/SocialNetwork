@@ -1,13 +1,13 @@
-package com.skoles.socialNetwork.payload;
+package com.skoles.socialNetwork.payload.response;
 
 import lombok.Getter;
 
 @Getter
-public class InvalidLoginResponse {
+public class InvalidSignInResponse {
     private String username;
     private String password;
 
-    public InvalidLoginResponse() {
+    public InvalidSignInResponse() {
         this.username = "Invalid Username";
         this.password = "Invalid Password";
     }
