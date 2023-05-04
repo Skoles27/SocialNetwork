@@ -1,15 +1,19 @@
 package com.skoles.socialNetwork.service;
 
+import com.skoles.socialNetwork.dto.UserDTO;
 import com.skoles.socialNetwork.entity.User;
 import com.skoles.socialNetwork.entity.enums.ERole;
-import com.skoles.socialNetwork.exceptions.UserExistException;
+import com.skoles.socialNetwork.exceptions.NotFoundException;
 import com.skoles.socialNetwork.payload.request.SignUpRequest;
 import com.skoles.socialNetwork.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
 
 @Service
 public class UserService {
@@ -38,7 +42,29 @@ public class UserService {
             userRepository.save(user);
         } catch (Exception ex) {
             LOG.error("Error registration. {}", ex.getMessage());
-            throw new UserExistException("The user " + user.getUsername() + " already exist.");
+            throw new NotFoundException("The user " + user.getUsername() + " already exist.");
         }
+    }
+
+    public User updateUser(UserDTO userDTO, Principal principal) {
+        User user = getUserByPrincipal(principal);
+        user.setName(userDTO.getName());
+        user.setLastname(userDTO.getLastname());
+        user.setBio(userDTO.getBio());
+        return userRepository.save(user);
+    }
+
+    public User getCurrentUser(Principal principal) {
+        return getUserByPrincipal(principal);
+    }
+
+    protected User getUserByPrincipal(Principal principal) {
+        String username = principal.getName();
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found with username " + username));
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findUserById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

@@ -9,7 +9,6 @@ import net.minidev.json.annotate.JsonIgnore;
 @NoArgsConstructor
 @Entity
 public class ImageModel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;

@@ -31,6 +31,8 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests()
+                .requestMatchers("/error").permitAll()
+                .requestMatchers("/error/**").permitAll()
                 .requestMatchers(SecurityConst.SIGN_UP_URLS).permitAll()
                 .anyRequest().authenticated();
 

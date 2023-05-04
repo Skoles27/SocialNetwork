@@ -14,7 +14,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

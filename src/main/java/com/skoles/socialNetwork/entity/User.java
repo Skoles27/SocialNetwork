@@ -5,6 +5,7 @@ import com.skoles.socialNetwork.entity.enums.ERole;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,6 +14,7 @@ import java.util.*;
 
 @Data
 @NoArgsConstructor
+@ToString
 @Entity
 public class User implements UserDetails {
     @Id
@@ -22,7 +24,7 @@ public class User implements UserDetails {
     private String name;
     @Column(nullable = false)
     private String lastname;
-    @Column(unique = true)
+    @Column(unique = true, updatable = false)
     private String username;
     @Column(unique = true)
     private String email;
@@ -34,8 +36,10 @@ public class User implements UserDetails {
     @ElementCollection(targetClass = ERole.class)
     @CollectionTable(name = "user_role",
     joinColumns = @JoinColumn(name = "user_id"))
+    @ToString.Exclude
     private Set<ERole> roles = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
+    @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(updatable = false)
