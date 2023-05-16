@@ -84,6 +84,15 @@ public class ImageService {
         return imageModel;
     }
 
+    public ImageModel getImageForOtherUser(Long id) {
+        ImageModel imageModel = imageRepository.findByUserId(id)
+                .orElseThrow(() -> new NotFoundException("Cannot find image for user: " + id));
+        if (!ObjectUtils.isEmpty(imageModel)) {
+            imageModel.setImageBytes(decompressBytes(imageModel.getImageBytes()));
+        }
+        return imageModel;
+    }
+
     private byte[] compressBytes(byte[] data) {
         Deflater deflater = new Deflater();
         deflater.setInput(data);

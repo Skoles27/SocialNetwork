@@ -14,7 +14,7 @@ public class SignUpRequest {
     @NotBlank(message = "User email is required")
     private String email;
     @NotEmpty(message = "Please enter your name")
-    private String firstname;
+    private String name;
     @NotEmpty(message = "Please enter your lastname")
     private String lastname;
     @NotEmpty(message = "Please enter your username")

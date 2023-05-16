@@ -7,6 +7,7 @@ import java.util.Set;
 @Data
 public class PostDTO {
     private Long id;
+    private Long userId;
     private String title;
     private String caption;
     private String location;

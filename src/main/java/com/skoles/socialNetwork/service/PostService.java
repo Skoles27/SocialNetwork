@@ -59,6 +59,11 @@ public class PostService {
         return postRepository.findAllByUserOrderByCreatedDateDesc(user);
     }
 
+    public List<Post> getAllPostForOtherUser(String userId) {
+        User user = userService.getUserById(Long.valueOf(userId));
+        return postRepository.findAllByUserOrderByCreatedDateDesc(user);
+    }
+
     public Post likePost(Long id, String username) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("post cannot be found"));

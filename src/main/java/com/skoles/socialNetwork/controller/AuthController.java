@@ -34,7 +34,7 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/signin")
+    @PostMapping("/signIn")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody SignInRequest signinRequest,
                                                BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
@@ -49,7 +49,7 @@ public class AuthController {
         return ResponseEntity.ok(new JWTSuccessResponse(true, jwt));
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/signUp")
     public ResponseEntity<Object> registerUser(@Valid @RequestBody SignUpRequest signUpRequest,
                                                BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);

@@ -45,4 +45,10 @@ public class ImageController {
         ImageModel imageModel = imageService.getImageForPost(Long.parseLong(postId));
         return new ResponseEntity<>(imageModel, HttpStatus.OK);
     }
+
+    @GetMapping("/{userId}/user/image")
+    public ResponseEntity<ImageModel> getImageForOtherUser(@PathVariable("userId") String userId) {
+        ImageModel imageModel = imageService.getImageForOtherUser(Long.parseLong(userId));
+        return new ResponseEntity<>(imageModel, HttpStatus.OK);
+    }
 }
