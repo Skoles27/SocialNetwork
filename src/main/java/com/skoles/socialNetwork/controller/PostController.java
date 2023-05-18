@@ -1,7 +1,9 @@
 package com.skoles.socialNetwork.controller;
 
 import com.skoles.socialNetwork.dto.PostDTO;
+import com.skoles.socialNetwork.dto.UserDTO;
 import com.skoles.socialNetwork.entity.Post;
+import com.skoles.socialNetwork.entity.User;
 import com.skoles.socialNetwork.facade.PostFacade;
 import com.skoles.socialNetwork.payload.response.MessageResponse;
 import com.skoles.socialNetwork.service.PostService;
@@ -70,6 +72,17 @@ public class PostController {
         Post post = postService.likePost(Long.parseLong(postId), username);
         PostDTO postDTO = postFacade.postToPostDTO(post);
         return new ResponseEntity<>(postDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("/{postId}/update")
+    public ResponseEntity<Object> updatePost(@Valid @RequestBody PostDTO postDTO, @PathVariable("postId") String postId,
+                                             BindingResult bindingResult, Principal principal) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        Post post = postService.updatePost(postDTO ,postId, principal);
+        PostDTO postUpdated = postFacade.postToPostDTO(post);
+        return new ResponseEntity<>(postUpdated, HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/delete")

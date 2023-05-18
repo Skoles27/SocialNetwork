@@ -56,6 +56,11 @@ public class ImageService {
                 .equals(postId))
                 .collect(toSinglePostCollector());
 
+        ImageModel postImg = imageRepository.findByPostId(postId).orElse(null);
+        if (!ObjectUtils.isEmpty(postImg)) {
+            imageRepository.delete(postImg);
+        }
+
         ImageModel imageModel = new ImageModel();
         imageModel.setPostId(post.getId());
         imageModel.setImageBytes(file.getBytes());
